@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Carrousel</title>
+    <style>
+        *{
+            margin: 0;
+            transition: 0.3s ease;
+        }
+
+        body, html{
+            height: 100%;
+            background: wheat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .carrousel-container{
+            width: 600px;
+            height: 400px;
+            background: #eee;
+            box-shadow: 0 0 20px #000;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carrousel{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .carrousel > img{
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+            margin: 0;
+        }
+
+        .carrousel-container:hover .button{
+            opacity: 0.6;
+        }
+
+        .button{
+            width: 2.5em;
+            height: 2.5em;
+            border-radius: 50%;
+            background: #000a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.5em;
+            font-family: Arial;
+            z-index: 2;
+            opacity: 0;
+            -webkit-user-select: none;
+        }
+
+        .button:hover{
+            cursor: pointer;
+            transform: translateY(-50%) scale(0.9);
+        }
+
+        .button:active{
+            cursor: pointer;
+            transform: translateY(-50%) scale(0.75);
+        }
+
+        .right{
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%) scale(0.8);
+        }
+
+        .left{
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%) scale(0.8);
+        }
+
+        .indicator-container{
+            height: 1em;
+            margin-top: 0.8em;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .indicator{
+            width: 0.5em;
+            height: 0.5em;
+            border-radius: 50%;
+            background: #504747;
+            z-index: 2;
+            margin: 0 0.2em;
+        }
+
+        .indicator:hover{
+            cursor: pointer;
+            transform: scale(1.2);
+        }
+
+        .on{
+            background: #000;
+            transform: scale(1.2);
+        }
+
+        .add-image{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 0.5em;
+        }
+
+        .add-image p{
+            opacity: 0;
+        }
+
+        .add-image:hover p{
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        .add-image input{
+            outline: none;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #000;
+            font-family: 'Times New Roman', Times, serif;
+            margin-right: 1em;
+        }
+
+        .add-image a:hover{
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .opaque{
+            opacity: 1 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="carrousel-container">
+        <span class="button left">&lt</span>
+        <span class="button right">&gt</span>
+        <div class="carrousel"></div>
+    </div>
+    <div class="indicator-container"></div>
+    <div class="add-image">
+        <p>Adicionar imagem</p>
+        <div style="display: none;">
+            <input placeholder="Link da imagem">
+            <a>Adicionar</a>
+        </div>
+    </div>
+    <script>
+        let imgs = [
+            "https://images.theconversation.com/files/125391/original/image-20160606-13080-s7o3qu.jpg?ixlib=rb-1.1.0&rect=273%2C0%2C2639%2C1379&q=45&auto=format&w=926&fit=clip",
+            "https://capturelandscapes.com/wp-content/uploads/2017/03/DSC2441-Panorama.jpeg",
+            "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80",
+            "https://thelandscapephotoguy.com/wp-content/uploads/2019/01/landscape%20new%20zealand%20S-shape.jpg",
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2015/04/Mount-Taranaki-volcano-in-New-Zealand.jpg",
+        ]
+
+        let r = document.querySelector(".right")
+        let l = document.querySelector(".left")
+        let c = document.querySelector(".carrousel")
+
+        let indCont = document.querySelector(".indicator-container")
+
+        let x = 0
+        let numEl = imgs.length
+        let currEl = 0
+
+        let interval = null
+        let timeout = setTimeout(startInterval, 2000)
+
+        let addImgBtn = document.querySelector(".add-image p")
+        let addImgDiv = document.querySelector(".add-image div")
+        let addImgInput = document.querySelector(".add-image input")
+        let addImgSubmit = document.querySelector(".add-image a")
+
+        addImgBtn.addEventListener("click", (evt) => {
+            evt.target.classList.add("opaque")
+            addImgDiv.style.display = ''
+            addImgInput.focus()
+        })
+
+        addImgSubmit.addEventListener("click", (evt) => {
+            addImgBtn.classList.remove("opaque")
+            addImgDiv.style.display = 'none'
+            if(addImgInput.value) addImage(addImgInput.value)
+            addImgInput.value = ''
+        })
+
+        createCarrouselImages()
+        createIndicators()
+
+        r.addEventListener("click", () => {
+            goRight()
+            stopInterval()
+            resetTimeout()
+        })
+
+        l.addEventListener("click", () => {
+            goLeft()
+            stopInterval()
+            resetTimeout()
+        })
+
+        function createCarrouselImages(){
+            imgs.forEach(el => {
+                let img = document.createElement("img")
+                img.src = el
+                c.appendChild(img)
+            })
+        }
+
+        function addCarrouselImage(src){
+            imgs.push(src)
+            let img = document.createElement("img")
+            img.src = src
+            c.appendChild(img)
+        }
+
+        function goRight(){
+            if(currEl == numEl - 1) currEl = 0
+            else currEl++
+            selectImage(currEl)
+        }
+
+        function goLeft(){
+            if(currEl == 0) currEl = numEl - 1
+            else currEl--
+            selectImage(currEl)
+        }
+
+        function selectImage(index){
+            let i = 0
+            indCont.childNodes.forEach(el => {
+                if(i == index) el.classList.add("on")
+                else el.classList.remove("on")
+                i++
+            })
+            x = 100 * index
+            currEl = index
+            c.style.transform = 'translateX(-' + x + '%)'
+        }
+
+        function createIndicators(){
+            for(let i = 0; i < numEl; i++){
+                let sp = document.createElement("span")
+                sp.classList.add("indicator")
+                if(i == currEl) sp.classList.add("on")
+                sp.addEventListener("click", (evt) => {
+                    selectImage(i)
+                    stopInterval()
+                    resetTimeout()
+                })
+                indCont.appendChild(sp)
+            }
+        }
+
+        function startInterval(){
+            interval = setInterval(goRight, 8000)
+        }
+
+        function stopInterval(){
+            clearInterval(interval)
+        }
+
+        function resetTimeout(){
+            clearTimeout(timeout)
+            timeout = setTimeout(startInterval, 2000)
+        }
+
+        function addImage(str){
+            let index = numEl
+            addCarrouselImage(str)
+            numEl++
+            let sp = document.createElement("span")
+            sp.classList.add("indicator")
+            sp.addEventListener("click", (evt) => {
+                selectImage(index)
+                stopInterval()
+                resetTimeout()
+            })
+            indCont.appendChild(sp)
+        }
+
+    </script>
+</body>
+</html>
