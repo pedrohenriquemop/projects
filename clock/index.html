@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Clock</title>
+    <style>
+        *{
+            margin: 0;
+            transition: 0.3s ease;
+            font-family: Arial;
+        }
+
+        body, html{
+            height: 100%;
+        }
+
+        #container{
+            width: 100vw;
+            height: 100vh;
+            background-image: linear-gradient(to bottom, wheat, rgb(248, 234, 208));
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .outer-clock{
+            transition: 0.3s linear;
+            width: 400px;
+            height: 400px;
+            background: gray;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px #000;
+            position: relative;
+            flex: 0 0 auto;
+        }
+
+        .clock{
+            width: 93%;
+            height: 93%;
+            background: lightgray;
+            border-radius: 50%;
+            box-shadow: inset 0 0 20px #000,
+            inset 0px 0px 50px lightyellow,
+            0px 0px 20px white;
+            position: relative;
+        }
+
+        .pin{
+            position: absolute;
+            width: 0.7em;
+            height: 0.7em;
+            background: #000;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .number{
+            font-size: 2em;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: 520;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            padding: 0.4em;
+            box-sizing: border-box;
+        }
+
+        .number span{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .number::after{
+            content: '';
+            width: 2px;
+            height: 10px;
+            background: #000;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translate(-50%);
+        }
+
+        .number:nth-of-type(3){
+            transform: rotateZ(30deg);
+        }
+        
+        .number:nth-of-type(3) span{
+            transform: rotateZ(-30deg);
+        }
+
+        .number:nth-of-type(4){
+            transform: rotateZ(60deg);
+        }
+
+        .number:nth-of-type(4) span{
+            transform: rotateZ(-60deg);
+        }
+
+        .number:nth-of-type(5){
+            transform: rotateZ(90deg);
+        }
+
+        .number:nth-of-type(5) span{
+            transform: rotateZ(-90deg);
+        }
+
+        .number:nth-of-type(6){
+            transform: rotateZ(120deg);
+        }
+
+        .number:nth-of-type(6) span{
+            transform: rotateZ(-120deg);
+        }
+
+        .number:nth-of-type(7){
+            transform: rotateZ(150deg);
+        }
+
+        .number:nth-of-type(7) span{
+            transform: rotateZ(-150deg);
+        }
+
+        .number:nth-of-type(8){
+            transform: rotateZ(180deg);
+        }
+
+        .number:nth-of-type(8) span{
+            transform: rotateZ(-180deg);
+        }
+
+        .number:nth-of-type(9){
+            transform: rotateZ(210deg);
+        }
+
+        .number:nth-of-type(9) span{
+            transform: rotateZ(-210deg);
+        }
+
+        .number:nth-of-type(10){
+            transform: rotateZ(240deg);
+        }
+
+        .number:nth-of-type(10) span{
+            transform: rotateZ(-240deg);
+        }
+
+        .number:nth-of-type(11){
+            transform: rotateZ(270deg);
+        }
+
+        .number:nth-of-type(11) span{
+            transform: rotateZ(-270deg);
+        }
+
+        .number:nth-of-type(12){
+            transform: rotateZ(300deg);
+        }
+
+        .number:nth-of-type(12) span{
+            transform: rotateZ(-300deg);
+        }
+
+        .number:nth-of-type(13){
+            transform: rotateZ(330deg);
+        }
+    
+        .number:nth-of-type(13) span{
+            transform: rotateZ(-330deg);
+        }
+
+        .pointer-m{
+            transition: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -85%);
+            transform-origin: 50% 85%;
+            width: 0.3em;
+            height: 43%;
+            border-radius: 20px;
+            background: rgb(36, 36, 36);
+            z-index: 5;
+        }
+
+        .pointer-h{
+            transition: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -85%);
+            transform-origin: 50% 85%;
+            width: 0.3em;
+            height: 28%;
+            border-radius: 20px;
+            background: #000;
+            z-index: 4;
+        }
+
+        .pointer-s{
+            transition: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -85%);
+            transform-origin: 50% 85%;
+            width: 0.1em;
+            height: 39%;
+            background: red;
+            z-index: 6;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="outer-clock">
+            <div class="clock">
+                <div class="pin"></div>
+                <div class="number">
+                    <span>12</span>
+                </div>
+                <div class="number">
+                    <span>1</span>
+                </div>
+                <div class="number">
+                    <span>2</span>
+                </div>
+                <div class="number">
+                    <span>3</span>
+                </div>
+                <div class="number">
+                    <span>4</span>
+                </div>
+                <div class="number">
+                    <span>5</span>
+                </div>
+                <div class="number">
+                    <span>6</span>
+                </div>
+                <div class="number">
+                    <span>7</span>
+                </div>
+                <div class="number">
+                    <span>8</span>
+                </div>
+                <div class="number">
+                    <span>9</span>
+                </div>
+                <div class="number">
+                    <span>10</span>
+                </div>
+                <div class="number">
+                    <span>11</span>
+                </div>
+                <div class="pointer-m"></div>
+                <div class="pointer-h"></div>
+                <div class="pointer-s"></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let container = document.querySelector("#container")
+        let outer = document.querySelector(".outer-clock")
+        let clock = document.querySelector(".clock")
+
+        let m = document.querySelector(".pointer-m")
+        let h = document.querySelector(".pointer-h")
+        let s = document.querySelector(".pointer-s")
+
+        let d = new Date()
+        let sReal = d.getSeconds()
+        let mReal = d.getMinutes()
+        let hReal = d.getHours()
+
+        let mDeg = mReal * 360 / 60 + sReal * (6 / 60)
+        let hDeg = hReal * 360 / 12 + mReal * (30 / 60) + sReal * (30 / 3600)
+        let sDeg = sReal * 360 / 60
+
+        rotatePointers()
+
+        let i = setInterval(() => {
+            sDeg += 360 / 60
+            mDeg += 360 / (60 * 60)
+            hDeg += 360 / (60 * 60 * 12)
+            if(sDeg == 360) sDeg = 0
+            if(mDeg == 360) mDeg = 0
+            if(hDeg == 360) hDeg = 0
+            rotatePointers()
+        }, 1000)
+
+        function rotatePointers(){
+            m.style.transform = `translate(-50%, -85%) rotateZ(${mDeg}deg)`
+            h.style.transform = `translate(-50%, -85%) rotateZ(${hDeg}deg)`
+            s.style.transform = `translate(-50%, -85%) rotateZ(${sDeg}deg)`
+        }
+
+        container.addEventListener("mousemove", (evt) => {
+            let x = evt.pageX, y = evt.pageY
+            if(x < container.offsetWidth / 2) x = x - container.offsetWidth / 2
+            else x = x - container.offsetWidth / 2
+            if(y < container.offsetHeight / 2) y = y - container.offsetHeight / 2
+            else y = y - container.offsetHeight / 2
+            outer.style.transform = `translateX(${-x / 500}px) translateY(${-y / 500}px) rotateX(${y / 40}deg) rotateY(${-x / 40}deg)`
+            outer.style.boxShadow = `${x / 200}px ${y / 200}px 10px gray,
+            ${x / 50}px ${y / 50}px 0px darkgray`
+            clock.style.boxShadow = `inset ${-x / 100}px ${-y / 100}px 20px #000,
+            inset ${x / 120}px ${y / 120}px 0px #000,
+            inset ${x / 20}px ${y / 20}px 50px lightyellow,
+            ${-x / 50}px ${-y / 50}px 20px white`
+            m.style.boxShadow = `${-x / 300}px ${-y / 300}px 2px gray`
+            h.style.boxShadow = `${-x / 300}px ${-y / 300}px 2px gray`
+            s.style.boxShadow = `${-x / 300}px ${-y / 300}px 2px gray`
+        })
+    </script>
+</body>
+</html>
