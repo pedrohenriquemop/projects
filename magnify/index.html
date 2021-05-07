@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Magnify</title>
+    <style>
+
+        *{
+            margin: 0;
+            transition: 0.3s ease;
+            font-family: 'Open Sans';
+        }
+
+        body, html{
+            height: 100%;
+        }
+
+        .container{
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: url("https://wallpaperaccess.com/full/1369012.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            cursor: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loupe{
+            transition: none;
+            left: calc(50% - 150px);
+            top: calc(50% - 150px);
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            border-radius: 50%;
+            background: url("https://wallpaperaccess.com/full/1369012.jpg");
+            background-attachment: fixed;
+            background-position: center;
+            background-size: 120%;
+            display: flex;
+            box-shadow: 0 0 50px #000;
+        }
+
+        .static{
+            transition: none;
+            position: absolute;
+            top: 0;
+            left: 40%;
+            width: 350px;
+            height: 100%;
+            background: red;
+            background: url("https://wallpaperaccess.com/full/1369012.jpg");
+            background-attachment: fixed;
+            background-position: center;
+            background-size: 120%;
+            background-position-y: 55%;
+            box-shadow: 0 0 20px #000;
+        }
+
+        .none{
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="static none"></div>
+        <div class="loupe"></div>
+    </div>
+    <script>
+        let c = document.querySelector(".container")
+        let l = document.querySelector(".loupe")
+        let s = document.querySelector(".static")
+
+        c.addEventListener("mousemove", (evt) => {
+            let x = evt.pageX - l.offsetWidth / 2
+            let y = evt.pageY - l.offsetHeight / 2
+            if(x <= 0) x = 0
+            if(x >= c.offsetWidth - l.offsetWidth) x = c.offsetWidth - l.offsetWidth
+            if(y <= 0) y = 0
+            if(y >= c.offsetHeight - l.offsetHeight) y = c.offsetHeight - l.offsetHeight
+            l.style.left = x + 'px'
+            l.style.top = y + 'px'
+            let xs = x
+            if(xs >= c.offsetWidth - s.offsetWidth) xs = c.offsetWidth - s.offsetWidth
+            s.style.left = xs + 'px'
+        })
+
+        c.addEventListener("click", (evt) => {
+            l.classList.toggle("none")
+            s.classList.toggle("none")
+        })
+    </script>
+</body>
+</html>
